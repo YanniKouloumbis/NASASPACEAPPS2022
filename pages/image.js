@@ -73,7 +73,7 @@ export default function ImagePage() {
                     <Divider mt={4}orientation='horizontal' />
                    
                   <HStack  mt={5}>
-                    {Array.isArray(data.keywords) && data.keywords.map((element)=><Tag py={2} size='lg' variant='solid' colorScheme='messenger'>
+                    {Array.isArray(data.keywords) && data.keywords.map((element)=><Tag  key={element} py={2} size='lg' variant='solid' colorScheme='messenger'>
                     <Text noOfLines={2} fontWeight={'bold'}>{element}</Text>
                     </Tag>)}
                   </HStack>
