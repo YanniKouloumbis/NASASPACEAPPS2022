@@ -4,15 +4,6 @@ import { Box, HStack, Button, InputRightAddon, Link, Image, SimpleGrid, Text, He
 import { ArrowBackIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { Flex } from '@chakra-ui/react'
 import autosize from "autosize";
-const { Configuration, OpenAIApi } = require("openai");
-
-
-const configuration = new Configuration({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
-
 
 export default function Dataset() {
     const ref = useRef();
@@ -30,47 +21,6 @@ export default function Dataset() {
     const [question, setQuestion] = useState("");
     const [researcherResponse, setResearcherResponse] = useState("");
     const [loading, setLoading] = useState(false);
-
-    async function requestResearcherResponse() {
-        //GTP3 OpenAI Call
-        //set researcherResponse to the response from GPT3
-        //multiline string
-        const prompt = `You are a NASA expert responding to an inquiry by a single user whose knowledge of the natural
-        sciences may be anywhere on a scale ranging from rudimentary to advanced, who wants to learn more
-        about a particular dataset or field of NASA science.
-        
-        Dataset:
-        ${data.title}
-        
-        Description:
-        ${data.description}
-        
-        Below is the question, please answer it in JSON format. Only answer the question asked. Answer as
-        specifically as possible. Prioritize direct answers in displaying information.
-        
-        {"question": "${question}", "answer":`;
-
-        const response = await openai.createCompletion({
-            model: "text-davinci-002",
-            prompt,
-            temperature: 0.7,
-            max_tokens: 1400,
-            top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-          });
-          //expected response: "answer from AI \n sadfsadfasfsf \n"}
-          //create a variable called result that extracts from first right bracket and removes the quotes.
-            let result = response.data.choices[0].text.split("}")[0];
-            //stripe starting and ending spaces
-            result = result.trim();
-            result = result.substring(1, result.length-1);
-            //remove all new lines
-            result = result.replace(/\\n/g, "");
-            //replace all spaces with a single space
-            result = result.replace(/\s+/g, " ");
-            setResearcherResponse(result);
-    }
 
     return (
         <Box w='100wh' h='100%' minH="100vh" px={5} bgGradient='linear(blue.900 0%, blue.700 25%, blue.500 50%)'>
@@ -121,14 +71,46 @@ export default function Dataset() {
                         <Input variant='solid' focusBorderColor='lime' value={question} size="lg"  placeholder='How can I use this dataset for machine learning?'  onKeyPress={async e=> {
                                   if (e.key === 'Enter') {
                                     setLoading(true);
-                                    await requestResearcherResponse();
+                                    await fetch('/api/hello', {
+                                      method: 'POST',
+                                      headers: {
+                                        'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({question: question, title: data.title, description: data.description}),
+                                    })
+                                      .then((res) => 
+                                      // set the state of researcherResponse to the response from the API
+                                      res.json())
+                                      .then((data) => {
+                                        setResearcherResponse(data.result);
+                                        setLoading(false);
+                                      }
+                                      )
+
                                     setLoading(false)
 
 
                                   }}} onChange={e => setQuestion(e.target.value)} />
                         <InputRightElement width='4.5rem' >
                           <Flex _hover={{transform: "scale(1.03)"}} transition="all .2s ease-in-out" _active={{transform: "scale(1.00)"}}>
-                            <Button varriant='solid' size="sm" onClick={async ()=> {setLoading(true);await requestResearcherResponse(); setLoading(false)}}>
+                            <Button varriant='solid' size="sm" onClick={async ()=> {setLoading(true);
+                                    await fetch('/api/hello', {
+                                      method: 'POST',
+                                      headers: {
+                                        'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({question: question, title: data.title, description: data.description}),
+                                    })
+
+                                      .then((res) =>
+                                      // set the state of researcherResponse to the response from the API
+                                      res.json())
+                                      .then((data) => {
+                                        setResearcherResponse(data.result);
+                                        setLoading(false);
+                                      }
+                                      )
+                              ; setLoading(false)}}>
                                 Ask!
                             </Button>
                           </Flex>
