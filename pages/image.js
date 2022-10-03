@@ -61,7 +61,7 @@ export default function ImagePage() {
               mr={2}
             >
                 <GridItem colSpan={[5, 3, 3]} rowSpan={[1, 1, 1]} position="relative">
-                    <Heading color='white'fontSize={25} mb={3}>Drag your cursor over the image to reveal a black brush. After drawing, type a prompt below and click generate; we will transform your image using AI. Don't forget to share!</Heading>
+                    <Heading color='white'fontSize={25} mb={3}>Drag your cursor over the image to reveal a black brush. After drawing, type a prompt below and click generate; we will transform your image using AI. Don`&apos;`t forget to share!</Heading>
                     {job && job.inProgress && <Center zIndex={2} position="absolute" padding={4} right={"30%"} top={"50%"} bg="white" rounded="lg"><Spinner color="blue" mr={4}/><Text>Loading Creation...</Text></Center>}
                     <CanvasDraw ref={canvas} alt="Canvas to Draw On" hideGrid brushRadius={brushRadius} brushColor="black"  imgSrc={href ? href : data.link } canvasWidth={512} canvasHeight={512} />
                 </GridItem>
@@ -123,7 +123,7 @@ export default function ImagePage() {
                           {/* TWITTER */}
                           <MenuList >
                             <MenuItem>
-                                <TwitterShareButton  url= 'https://google.com' title={`I created this with Data Without Limits using a NASA database! Credit to ${data.credit === "" ? "NASA" : data.credit}`}>
+                                <TwitterShareButton  url={href} title={`I created this with Data Without Limits using a NASA database! Credit to ${data.credit === "" ? "NASA" : data.credit}`}>
                                   <HStack>
                                     <TwitterIcon size={36}/>
                                     <Text>Twitter</Text>
@@ -134,7 +134,7 @@ export default function ImagePage() {
                             </MenuItem>
 
                             <MenuItem>
-                              <FacebookShareButton url= 'https://google.com' title={`I created this with Data Without Limits using a NASA database! Credit to ${data.credit}`}>
+                              <FacebookShareButton url={href} title={`I created this with Data Without Limits using a NASA database! Credit to ${data.credit}`}>
                                 <HStack  pl={3} w="100%">
                                       <FacebookIcon size={36} />
                                       <Text>Facebook</Text>
