@@ -8,7 +8,7 @@ import CanvasDraw from "react-canvas-draw";
 import { useRef } from "react";
 import firebase from "firebase";
 
-export default function Image() {
+export default function ImagePage() {
 
     const router = useRouter()
     const data = router.query;
