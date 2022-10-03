@@ -15,7 +15,7 @@ const fetch = require('node-fetch');
 //when a new job is created in the jobs collection, send it off to an api to be processed
 exports.processJob = functions.firestore.document('jobs/{jobId}').onCreate(async (snap, context) => {
     const data = snap.data();
-    const link = "https://funny-nights-jog-34-142-216-60.loca.lt/"
+    const link = "https://bright-beers-knock-34-142-216-60.loca.lt/"
     const response = await fetch(`${link}jobs`, {
         method: "POST",
         headers: {
